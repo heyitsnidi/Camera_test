@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Camera Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: white;
+    }
+    #wrapper {
+      text-align: center;
+    }
+    video {
+      width: 100vw;
+      height: auto;
+      max-height: 100vh;
+      background: #222;
+    }
+    #status {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <video id="video" autoplay playsinline></video>
+    <div id="status">Tap “Allow” when the browser asks for camera access.</div>
+  </div>
+
+  <script>
+    async function startCamera() {
+      const video = document.getElementById('video');
+      const statusEl = document.getElementById('status');
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "environment" // use back camera on phones/tablets if available
+          },
+          audio: false
+        });
+        video.srcObject = stream;
+        statusEl.textContent = "Camera running. Move around and observe.";
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Could not access camera: " + err.name;
+      }
+    }
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      startCamera();
+    } else {
+      document.getElementById('status').textContent =
+        "Camera API not supported in this browser.";
+    }
+  </script>
+</body>
+</html>
 
